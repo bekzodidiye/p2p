@@ -27,6 +27,12 @@ jobs:
             cp backend/.env.example backend/.env
           fi
 
+          echo "📦 Building Frontend SPA..."
+          cd /home/ubuntu/p2p/frontend
+          npm install
+          npm run build
+          cd /home/ubuntu/p2p
+
           echo "🐳 Building and updating Docker containers..."
           docker compose up -d --build
 
