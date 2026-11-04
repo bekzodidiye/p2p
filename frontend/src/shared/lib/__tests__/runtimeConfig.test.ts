@@ -217,3 +217,30 @@ test('local development ignores production VITE_API_URL and safely defaults to r
     setRuntimeEnvOverride(null);
   }
 });
+
+test('self-hosted production deployment defaults to relative proxy target', () => {
+  const originalWindow = (globalThis as any).window;
+  try {
+    setRuntimeEnvOverride({
+      PROD: true,
+    });
+    (globalThis as any).window = {
+      location: {
+        protocol: 'http:',
+        host: '18.199.92.38',
+        hostname: '18.199.92.38',
+      },
+    };
+
+    assert.strictEqual(isStagingOrPreview(), false);
+    const apiUrl = getResolvedApiUrl();
+    assert.strictEqual(apiUrl, '/api/v1');
+
+    const wsUrl = getResolvedWsUrl('session_token');
+    assert.ok(wsUrl.includes('/ws/slots?token=session_token'));
+    assert.ok(wsUrl.startsWith('ws://18.199.92.38') || wsUrl.startsWith('wss://18.199.92.38'));
+  } finally {
+    (globalThis as any).window = originalWindow;
+    setRuntimeEnvOverride(null);
+  }
+});

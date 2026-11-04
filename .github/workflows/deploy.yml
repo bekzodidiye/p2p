@@ -29,6 +29,7 @@ jobs:
 
           echo "📦 Building Frontend SPA..."
           cd /home/ubuntu/p2p/frontend
+          echo "VITE_API_URL=/api/v1" > .env
           npm install
           npm run build
           cd /home/ubuntu/p2p

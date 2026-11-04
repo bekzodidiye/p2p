@@ -106,12 +106,12 @@ export function getResolvedApiUrl(): string {
     return PRODUCTION_API_URL;
   }
 
-  // If built for production but host/env is unknown and no explicit VITE_API_URL, fail safe
+  // Standalone, self-hosted, or Docker production deployments (same origin reverse proxy)
   if (env.PROD) {
     if (envApiUrl && !envApiUrl.includes('p2p-r5l6') && !envApiUrl.includes('p2p-o1ex.onrender.com')) {
       return envApiUrl.replace(/\/+$/, '');
     }
-    return '';
+    return '/api/v1';
   }
 
   return '/api/v1';
