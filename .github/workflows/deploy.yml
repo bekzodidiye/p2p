@@ -37,6 +37,9 @@ jobs:
           echo "🐳 Building and updating Docker containers..."
           docker compose up -d --build
 
+          echo "🗄️ Running database migrations..."
+          docker compose exec -T api alembic upgrade head
+
           echo "🧹 Cleaning up dangling build images..."
           docker image prune -f
 

@@ -5,6 +5,11 @@ services:
       dockerfile: docker/Dockerfile
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000
     env_file: ./backend/.env
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://user:pass@postgres:5432/p2p_db
+      - REDIS_URL=redis://redis:6379/0
+      - CELERY_BROKER_URL=redis://redis:6379/1
+      - CELERY_RESULT_BACKEND=redis://redis:6379/2
     depends_on:
       - postgres
       - redis
@@ -17,6 +22,11 @@ services:
       dockerfile: docker/Dockerfile
     command: celery -A app.tasks.celery_app.celery_app worker --loglevel=info
     env_file: ./backend/.env
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://user:pass@postgres:5432/p2p_db
+      - REDIS_URL=redis://redis:6379/0
+      - CELERY_BROKER_URL=redis://redis:6379/1
+      - CELERY_RESULT_BACKEND=redis://redis:6379/2
     depends_on:
       - postgres
       - redis
@@ -27,6 +37,10 @@ services:
       dockerfile: docker/Dockerfile
     command: celery -A app.tasks.celery_app.celery_app beat --loglevel=info
     env_file: ./backend/.env
+    environment:
+      - REDIS_URL=redis://redis:6379/0
+      - CELERY_BROKER_URL=redis://redis:6379/1
+      - CELERY_RESULT_BACKEND=redis://redis:6379/2
     depends_on:
       - redis
 
@@ -36,6 +50,9 @@ services:
       dockerfile: docker/Dockerfile
     command: python -m bot.main
     env_file: ./backend/.env
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://user:pass@postgres:5432/p2p_db
+      - REDIS_URL=redis://redis:6379/0
     depends_on:
       - api
 
