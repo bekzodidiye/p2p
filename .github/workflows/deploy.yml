@@ -1,4 +1,4 @@
-name: Deploy to AWS Lightsail
+name: Deploy to AWS Lightsail (Self-Hosted)
 
 on:
   push:
@@ -8,37 +8,29 @@ on:
 
 jobs:
   deploy:
-    name: Deploy to AWS Server
-    runs-on: ubuntu-latest
+    name: Native Deploy on AWS Server
+    runs-on: self-hosted
 
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
+      - name: Deploy P2P Containers
+        run: |
+          set -e
+          echo "🚀 Navigating to /home/ubuntu/p2p..."
+          cd /home/ubuntu/p2p
 
-      - name: Deploy via SSH to AWS Server
-        uses: appleboy/ssh-action@v1.2.0
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_KEY }}
-          script: |
-            set -e
-            echo "🚀 Navigating to /home/ubuntu/p2p..."
-            cd /home/ubuntu/p2p
+          echo "📥 Pulling latest changes from main..."
+          git fetch origin main
+          git reset --hard origin/main
 
-            echo "📥 Pulling latest changes from main..."
-            git fetch origin main
-            git reset --hard origin/main
+          echo "🐳 Checking environment configuration..."
+          if [ ! -f backend/.env ] && [ -f backend/.env.example ]; then
+            cp backend/.env.example backend/.env
+          fi
 
-            echo "🐳 Checking environment configuration..."
-            if [ ! -f backend/.env ] && [ -f backend/.env.example ]; then
-              cp backend/.env.example backend/.env
-            fi
+          echo "🐳 Building and updating Docker containers..."
+          docker compose up -d --build
 
-            echo "🐳 Building and updating Docker containers..."
-            docker compose up -d --build
+          echo "🧹 Cleaning up dangling build images..."
+          docker image prune -f
 
-            echo "🧹 Cleaning up dangling build images..."
-            docker image prune -f
-
-            echo "✅ Deployment completed successfully!"
+          echo "✅ Deployment completed successfully on AWS Lightsail!"
