@@ -47,7 +47,7 @@ export default function LoginPage() {
   const botUrl =
     loginData?.bot_url ||
     (loginData?.temp_token
-      ? `https://t.me/p2p_corpus_bot?start=${loginData.temp_token}`
+      ? `https://t.me/p2p_school21_bot?start=${loginData.temp_token}`
       : null);
 
   const {

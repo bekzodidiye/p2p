@@ -70,7 +70,7 @@ class TestTelegram2FASemantics(unittest.IsolatedAsyncioTestCase):
 
         with patch("app.api.v1.auth.school21_client", mock_s21), \
              patch("app.api.v1.auth.redis_client", fake_redis), \
-             patch.object(settings, "TELEGRAM_BOT_USERNAME", "p2p_corpus_bot"), \
+             patch.object(settings, "TELEGRAM_BOT_USERNAME", "p2p_school21_bot"), \
              patch.object(settings, "ENFORCE_TELEGRAM_2FA", False), \
              patch.object(settings, "LOCAL_STAGING", False):
 
@@ -78,7 +78,7 @@ class TestTelegram2FASemantics(unittest.IsolatedAsyncioTestCase):
 
             self.assertEqual(resp.status, "need_telegram")
             self.assertIsNotNone(resp.temp_token)
-            self.assertIn("p2p_corpus_bot", resp.bot_url)
+            self.assertIn("p2p_school21_bot", resp.bot_url)
             self.assertIsNone(resp.access_token)
 
     async def test_subsequent_login_with_linked_telegram_issues_jwt_when_enforce_2fa_false(self):
@@ -148,7 +148,7 @@ class TestTelegram2FASemantics(unittest.IsolatedAsyncioTestCase):
         with patch("app.api.v1.auth.school21_client", mock_s21), \
              patch("app.api.v1.auth.redis_client", fake_redis), \
              patch.object(settings, "ENFORCE_TELEGRAM_2FA", True), \
-             patch.object(settings, "TELEGRAM_BOT_USERNAME", "p2p_corpus_bot"), \
+             patch.object(settings, "TELEGRAM_BOT_USERNAME", "p2p_school21_bot"), \
              patch.object(settings, "LOCAL_STAGING", False):
 
             resp = await login(request=req, payload=payload, db=mock_db)

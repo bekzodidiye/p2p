@@ -78,7 +78,7 @@ class Settings(BaseSettings):
 
     # Telegram
     TELEGRAM_BOT_TOKEN: str = ""
-    TELEGRAM_BOT_USERNAME: str = "p2p_corpus_bot"
+    TELEGRAM_BOT_USERNAME: str = "p2p_school21_bot"
     TELEGRAM_API_BASE: str = "https://api.telegram.org/bot"
     TELEGRAM_WEBHOOK_URL: str = ""
     TELEGRAM_REQUIRED_CHANNEL: str = ""

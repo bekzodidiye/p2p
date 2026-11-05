@@ -72,7 +72,7 @@ class TestAuthCrossEnvironmentIsolation(unittest.IsolatedAsyncioTestCase):
 
         with patch("app.api.v1.auth.school21_client", mock_s21), \
              patch("app.api.v1.auth.redis_client", fake_redis), \
-             patch.object(settings, "TELEGRAM_BOT_USERNAME", "p2p_corpus_bot"), \
+             patch.object(settings, "TELEGRAM_BOT_USERNAME", "p2p_school21_bot"), \
              patch.object(settings, "LOCAL_STAGING", False), \
              patch("httpx.AsyncClient") as mock_client_cls:
 
@@ -85,7 +85,7 @@ class TestAuthCrossEnvironmentIsolation(unittest.IsolatedAsyncioTestCase):
 
             self.assertEqual(resp.status, "need_telegram")
             self.assertIsNotNone(resp.temp_token)
-            self.assertEqual(resp.bot_url, f"https://t.me/p2p_corpus_bot?start={resp.temp_token}")
+            self.assertEqual(resp.bot_url, f"https://t.me/p2p_school21_bot?start={resp.temp_token}")
             self.assertIsNone(resp.staging_otp)
 
     async def test_verify_code_never_calls_production_render_backend(self):
